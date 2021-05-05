@@ -1,4 +1,4 @@
-export const createElement = tagName => (strings, ...args) => ({
+const createElement = tagName => (strings, ...args) => ({
   type: tagName,
   template: strings.reduce(
     (acc, current, index) => acc + current + (args[index] || ""),
