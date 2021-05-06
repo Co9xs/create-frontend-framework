@@ -1,20 +1,28 @@
 import h from "snabbdom/h";
 
 const initialState = {
-  template: ""
+  template: "",
+  on: {}
 };
 
-const createReducer = args => (acc, currentString, index) => ({
-  ...acc,
-  template: acc.template + currentString + (args[index] || "")
-});
+const createReducer = args => (acc, currentString, index) => {
+  const currentArg = args[index]
+  if (currentArg && currentArg.type === "event") {
+    return {...acc, on: {click: currentArg.click }}
+  }
+
+  return {
+    ...acc,
+    template: acc.template + currentString + (args[index] || "")
+  }
+};
 
 const createElement = tagName => (strings, ...args) => {
-  const { template } = strings.reduce(createReducer(args), initialState);
+  const { template, on } = strings.reduce(createReducer(args), initialState);
 
   return {
     type: "element",
-    template: h(tagName, {}, template)
+    template: h(tagName, { on }, template)
   };
 };
 
